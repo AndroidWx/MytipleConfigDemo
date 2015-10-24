@@ -1,0 +1,63 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "23.0.0"
+
+    defaultConfig {
+        applicationId "com.unicorn.multiple.myapplication"
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+
+
+    signingConfigs {
+        release {
+            storePassword "xxx"
+            keyAlias "xxx"
+            keyPassword "xxx"
+        }
+    }
+
+    buildTypes {
+        release {
+            buildConfigField "String", "NET_MODE", "\"release\""
+            resValue "string", "app_name", "差分版本"
+
+            //设置是否混淆，否
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            buildConfigField "String", "NET_MODE", "\"debug\""
+            resValue "string", "app_name", "差分版本(测试版)"
+
+            //更改applicationId，让测试版和正式版同时存在
+            applicationIdSuffix '.debug'
+
+        }
+    }
+
+    productFlavors {
+        _debug {}
+        official {}
+        baidu {}
+        _360 {}
+        yingyongbao {
+        }
+        wandoujia {}
+    }
+
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [URL_VALUE: name]
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
